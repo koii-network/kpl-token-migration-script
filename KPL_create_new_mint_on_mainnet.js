@@ -7,7 +7,7 @@ const freezeAuthority = Keypair.fromSecretKey(Uint8Array.from(privateKeyArray));
 
 const connection = new Connection(
   /***********DO NOT EDIT ABOVE THIS LINE***********/
-  "http://localhost:8899",
+  "http://localhost:8899", // Change to mainnet url
   /***********DO NOT EDIT BELOW THIS LINE***********/
   "confirmed",
 );
