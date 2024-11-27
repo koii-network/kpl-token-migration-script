@@ -17,7 +17,7 @@ const KPLTokensAddress = [
 /************************DO NOT EDIT BELOW THIS LINE************************/
 const connection = new Connection("https://testnet.koii.network", "confirmed");
 
-async function getTokenDistribution(mintAddress) {
+async function getTokenDistribution(mintAddress, excludedAccounts) {
   // Get all token accounts for the mint
   const accounts = await connection.getProgramAccounts(TOKEN_PROGRAM_ID, {
     filters: [
@@ -38,8 +38,9 @@ async function getTokenDistribution(mintAddress) {
     const accountData = AccountLayout.decode(account.account.data);
     const owner = new PublicKey(accountData.owner);
     const balance = accountData.amount; // raw balance in smallest units (lamports of the token)
-
-    return { owner: owner.toBase58(), balance: balance };
+    if (!excludedAccounts.includes(owner.toBase58())) {
+      return { owner: owner.toBase58(), balance: balance };
+    }
   });
   return result;
 }
@@ -51,10 +52,32 @@ async function addToMongoDB(result, collectionName) {
   await collection.insertMany(result);
   await client.close();
 }
+async function getExcludedAccounts() {
+  console.log("Getting KPL program accounts");
+  const programId = new PublicKey(
+    "KPLTRVs6jA7QTthuJH2cEmyCEskFbSV2xpZw46cganN",
+  );
 
+  // Fetch the program accounts
+  const KPLProgramAccounts = await connection.getProgramAccounts(programId, {
+    dataSlice: { offset: 0, length: 0 }, // Fetch only metadata, not full data
+    filters: [], // No filters
+  });
+
+  console.log("KPL program accounts fetched");
+
+  // Map the accounts to their base58 string public keys
+  const accountKeys = KPLProgramAccounts.map((account) =>
+    account.pubkey.toBase58(),
+  );
+
+  // Return the array of public key strings
+  return accountKeys;
+}
 async function main() {
+  const excludedAccounts = await getExcludedAccounts();
   for (const address of KPLTokensAddress) {
-    const result = await getTokenDistribution(address);
+    const result = await getTokenDistribution(address, excludedAccounts);
     await addToMongoDB(result, address);
   }
 }
