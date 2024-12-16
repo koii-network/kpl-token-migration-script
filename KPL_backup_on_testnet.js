@@ -38,7 +38,10 @@ async function getTokenDistribution(mintAddress, excludedAccounts) {
     const accountData = AccountLayout.decode(account.account.data);
     const owner = new PublicKey(accountData.owner);
     const balance = accountData.amount; // raw balance in smallest units (lamports of the token)
-    if (!excludedAccounts.includes(owner.toBase58())) {
+    if (
+      !excludedAccounts.includes(owner.toBase58()) &&
+      PublicKey.isOnCurve(owner)
+    ) {
       return { owner: owner.toBase58(), balance: balance };
     }
   });
