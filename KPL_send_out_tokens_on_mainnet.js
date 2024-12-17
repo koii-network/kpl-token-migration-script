@@ -11,16 +11,16 @@ const privateKeyArray = privateKeyString.split(",").map(Number);
 const senderKeypair = Keypair.fromSecretKey(Uint8Array.from(privateKeyArray));
 /***********DO NOT EDIT ABOVE THIS LINE***********/
 const oldMintAddress = "FJG2aEPtertCXoedgteCCMmgngSZo1Zd715oNBzR7xpR";
-const newMintAddress = "GtkfJzxNqLpye1GwPUTQZRNgwZfjpeQPRrhv5PyBwEhA";
+const newMintAddress = "4sJy3ywBdkPsBUEpgtDN4xvvyyLXnordYMCYU64VXcDw";
 const connection = new Connection("http://localhost:8899", "confirmed");
 /***********DO NOT EDIT BELOW THIS LINE***********/
+const BATCH_SIZE = 10;
+const client = new MongoClient(process.env.MONGODB_URL);
+
 async function readFromMongoDB(collectionName, query = {}) {
-  const client = new MongoClient(process.env.MONGODB_URL);
-  await client.connect();
   const db = client.db("Migration");
   const collection = db.collection(`KPL_${collectionName}`);
   const results = await collection.find(query).toArray();
-  await client.close();
   return results;
 }
 
@@ -29,13 +29,13 @@ async function updateTransactionResult(
   query,
   { status, signature },
 ) {
-  const client = new MongoClient(process.env.MONGODB_URL);
-  await client.connect();
+
+  
   const db = client.db("Migration");
   const collection = db.collection(`KPL_${collectionName}`);
   await collection.updateOne(query, { $set: { status, signature } });
-  await client.close();
 }
+
 async function createTokenAccount(mintAddress, toAddress) {
   try {
     const tokenAccount = await getOrCreateAssociatedTokenAccount(
@@ -52,6 +52,7 @@ async function createTokenAccount(mintAddress, toAddress) {
     return null;
   }
 }
+
 async function sendToken(mintAddress, amount, toAddress) {
   if (amount == 0) {
     return { status: "Success", signature: null };
@@ -83,8 +84,8 @@ async function sendToken(mintAddress, amount, toAddress) {
       console.log(error);
       return { status: "Failed", signature: null };
     }
-
-    for (let i = 0; i < 10; i++) {
+    let waitTime = 1000;
+    for (let i = 0; i < 9; i++) {
       const result = await connection.getSignatureStatus(signature);
 
       if (result?.value?.err != null) {
@@ -99,8 +100,12 @@ async function sendToken(mintAddress, amount, toAddress) {
       }
       if (result?.value?.confirmationStatus == "processed") {
         console.log("Transaction Processing.");
+        await new Promise((resolve) => setTimeout(resolve, waitTime));
+        waitTime *= 2;
         continue;
       }
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
+      waitTime *= 2;
     }
     return { status: "Unknown", signature: signature };
   }
@@ -138,10 +143,14 @@ async function processBatch(batch) {
 
 async function main() {
   const responses = await readFromMongoDB(oldMintAddress);
-  for (let i = 0; i < responses.length; i += 10) {
-    const batch = responses.slice(i, i + 10);
+  for (let i = 0; i < responses.length; i += BATCH_SIZE) {
+    const batch = responses.slice(i, i + BATCH_SIZE);
     await processBatch(batch);
   }
 }
 
 main();
+
+process.on('exit', () => {
+  client.close();
+});
