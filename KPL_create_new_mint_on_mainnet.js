@@ -1,5 +1,5 @@
 import { createMint } from "@solana/spl-token";
-import { clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 import dotenv from "dotenv";
 dotenv.config();
 const privateKeyArray = process.env.PRIVATE_KEY.split(",").map(Number);

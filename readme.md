@@ -41,3 +41,6 @@
   endLine: 15
   ```
   Repeat Step2 and Step3 as needed.
+### 4. Access https://kpl.koii.network/
+- Please upload your metadata again through the KPL token portal
+- It is encouraged that you can host your icon on your own server
