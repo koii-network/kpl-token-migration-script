@@ -1,4 +1,4 @@
-import { Connection, PublicKey } from "@_koii/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import { getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
 import { MongoClient } from "mongodb";
 import { Keypair } from "@solana/web3.js";
@@ -11,8 +11,8 @@ const privateKeyArray = privateKeyString.split(",").map(Number);
 const senderKeypair = Keypair.fromSecretKey(Uint8Array.from(privateKeyArray));
 /***********DO NOT EDIT ABOVE THIS LINE***********/
 const oldMintAddress = "FJG2aEPtertCXoedgteCCMmgngSZo1Zd715oNBzR7xpR";
-const newMintAddress = "4sJy3ywBdkPsBUEpgtDN4xvvyyLXnordYMCYU64VXcDw";
-const connection = new Connection("http://localhost:8899", "confirmed");
+const newMintAddress = "7gWY3DyG9CWii9UhC8y27HFexH2yYWeYJKfJ6sofs46W";
+const connection = new Connection("https://mainnet.koii.network", "confirmed");
 /***********DO NOT EDIT BELOW THIS LINE***********/
 const BATCH_SIZE = 10;
 const client = new MongoClient(process.env.MONGODB_URL);
@@ -76,38 +76,8 @@ async function sendToken(mintAddress, amount, toAddress) {
     );
     return { status: "Success", signature: signature };
   } catch (error) {
-    const signatureMatch = error.message.match(/signature (\w+)/);
-    const signature = signatureMatch
-      ? signatureMatch[1]
-      : "Signature not found";
-    if (signature == "Signature not found") {
-      console.log(error);
-      return { status: "Failed", signature: null };
-    }
-    let waitTime = 1000;
-    for (let i = 0; i < 9; i++) {
-      const result = await connection.getSignatureStatus(signature);
-
-      if (result?.value?.err != null) {
-        return { status: "Failed", signature: signature };
-      }
-      if (
-        result?.value?.confirmationStatus == "finalized" ||
-        result?.value?.confirmationStatus == "confirmed"
-      ) {
-        console.log("Transaction is Confirmed!");
-        return { status: "Success", signature: signature };
-      }
-      if (result?.value?.confirmationStatus == "processed") {
-        console.log("Transaction Processing.");
-        await new Promise((resolve) => setTimeout(resolve, waitTime));
-        waitTime *= 2;
-        continue;
-      }
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
-      waitTime *= 2;
-    }
-    return { status: "Unknown", signature: signature };
+    console.log(error);
+    return { status: "Failed", signature: null };
   }
 }
 
