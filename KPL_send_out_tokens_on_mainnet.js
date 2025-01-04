@@ -14,7 +14,7 @@ const oldMintAddress = "FJG2aEPtertCXoedgteCCMmgngSZo1Zd715oNBzR7xpR";
 const newMintAddress = "7gWY3DyG9CWii9UhC8y27HFexH2yYWeYJKfJ6sofs46W";
 const connection = new Connection("https://mainnet.koii.network", "confirmed");
 /***********DO NOT EDIT BELOW THIS LINE***********/
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 10;
 const client = new MongoClient(process.env.MONGODB_URL);
 
 async function readFromMongoDB(collectionName) {
