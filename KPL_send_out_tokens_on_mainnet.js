@@ -14,12 +14,13 @@ const oldMintAddress = "FJG2aEPtertCXoedgteCCMmgngSZo1Zd715oNBzR7xpR";
 const newMintAddress = "7gWY3DyG9CWii9UhC8y27HFexH2yYWeYJKfJ6sofs46W";
 const connection = new Connection("https://mainnet.koii.network", "confirmed");
 /***********DO NOT EDIT BELOW THIS LINE***********/
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 100;
 const client = new MongoClient(process.env.MONGODB_URL);
 
-async function readFromMongoDB(collectionName, query = {}) {
+async function readFromMongoDB(collectionName) {
   const db = client.db("Migration");
   const collection = db.collection(`KPL_${collectionName}`);
+  const query = { status: { $nin: ["Success", "Unknown"] } };
   const results = await collection.find(query).toArray();
   return results;
 }
@@ -91,8 +92,10 @@ async function processBatch(batch) {
     if (
       response.status &&
       (response.status == "Success" || response.status == "Unknown")
-    )
+    ) {
+      console.log("Skipping", response.owner);
       return null;
+    }
 
     const { status, signature } = await sendToken(
       newMintAddress,
