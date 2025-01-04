@@ -8,7 +8,7 @@ const mintAuthority = Keypair.fromSecretKey(Uint8Array.from(privateKeyArray));
 const freezeAuthority = Keypair.fromSecretKey(Uint8Array.from(privateKeyArray));
 const connection = new Connection(
   /***********DO NOT EDIT ABOVE THIS LINE***********/
-  "http://localhost:8899", // Change to mainnet url
+  "https://mainnet.koii.network", // Change to mainnet url
   /***********DO NOT EDIT BELOW THIS LINE***********/
   "confirmed",
 );

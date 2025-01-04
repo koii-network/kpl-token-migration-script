@@ -1,5 +1,3 @@
-import { Connection, PublicKey } from "@_koii/web3.js";
-import { TOKEN_PROGRAM_ID, AccountLayout } from "@solana/spl-token";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
@@ -13,9 +11,11 @@ const KPLTokensAddress = [
   "FJG2aEPtertCXoedgteCCMmgngSZo1Zd715oNBzR7xpR", // FIRE
   "us8mD4jGkFWnUuAHB8V5ZcrAosEqi2h1Zcyca68QA1G", // BIRD
   "9UcQaSsBTeXowhMBgSbTEeQubGHxXDNJRjz4s7uxibTP", // BBIG
+  "NGFruaQX9xHqWv195RNQL2wtq2LJwTmnkE9XjGAZKHx", // SOMA
+  "3kh898gitJDSb6b7MsntLqyUAvy3Y6D4PkMyGfinubht", // VIP
+  "6kgpmvSCh6aVNXnCihnrtFYcjLR7pkK6mcLgf3imEC4q", // ASTRO
 ];
 /************************DO NOT EDIT BELOW THIS LINE************************/
-const connection = new Connection("https://testnet.koii.network", "confirmed");
 
 async function getTokenDistribution(mintAddress) {
   const url = `https://kpltoken.api.koii.network/api/metadata/testnetDistribution?mintAddress=${mintAddress}`;
