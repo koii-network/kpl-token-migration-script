@@ -1,7 +1,7 @@
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Connection, PublicKey } from "@_koii/web3.js";
 import { getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
 import { MongoClient } from "mongodb";
-import { Keypair } from "@solana/web3.js";
+import { Keypair } from "@_koii/web3.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -77,10 +77,42 @@ async function sendToken(mintAddress, amount, toAddress) {
     );
     return { status: "Success", signature: signature };
   } catch (error) {
-    console.log(error);
-    return { status: "Failed", signature: null };
+    const signatureMatch = error.message.match(/signature (\w+)/);
+    const signature = signatureMatch
+      ? signatureMatch[1]
+      : "Signature not found";
+    if (signature == "Signature not found") {
+      console.log(error);
+      return { status: "Failed", signature: null };
+    }
+    let waitTime = 1000;
+    for (let i = 0; i < 9; i++) {
+      const result = await connection.getSignatureStatus(signature);
+
+      if (result?.value?.err != null) {
+        return { status: "Failed", signature: signature };
+      }
+      if (
+        result?.value?.confirmationStatus == "finalized" ||
+        result?.value?.confirmationStatus == "confirmed"
+      ) {
+        console.log("Transaction is Confirmed!");
+        return { status: "Success", signature: signature };
+      }
+      if (result?.value?.confirmationStatus == "processed") {
+        console.log("Transaction Processing.");
+        await new Promise((resolve) => setTimeout(resolve, waitTime));
+        waitTime *= 2;
+        continue;
+      }
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
+      waitTime *= 2;
+    }
+    return { status: "Unknown", signature: signature };
   }
 }
+
+
 
 async function processBatch(batch) {
   const createTokenPromises = batch.map((response) =>
