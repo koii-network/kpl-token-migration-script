@@ -31,7 +31,7 @@
 
 - In the `KPL_create_new_mint_on_mainnet.js` file you'll find a parameter with the address  `"http://localhost:8899"`. **When you're done testing**, within line 10 and line 12, please edit and replace the local host address with the following mainnet url: `https://mainnet.koii.network`.
 
-  Repeat Step 2 (an optionally Step 3) as needed.
+  (Optional: Repeat Step2 and Step3 as needed)
 
 ### Step 4. Access https://kpl.koii.network/bind
 - Please upload your metadata again through the KPL token portal via the "Bind Metadata" tool.
