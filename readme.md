@@ -1,12 +1,6 @@
 # KPL Migration Guide
 
-## Part A: Mint your MainNet token
-Head to our [KPL Token Minter](http://kpl.koii.network/) and mint a MainNet token (see top right of page).
-
-## Part B: Clone this repo
-
-## Part C: Dependencies and Env File
-
+## Part A: Install Dependencies
 1. **Install Dependencies**：
    - Make sure you installed Node.js/npm/yarn。
      ```bash
@@ -22,7 +16,7 @@ Head to our [KPL Token Minter](http://kpl.koii.network/) and mint a MainNet toke
      MONGODB_URL=your_mongodb_url_here
      ```
 
-## Part D: Step by Step Edit & Run File
+## Part B: Step by Step Edit & Run File
 
 ### Step 1. `KPL_backup_on_testnet.js`
 
