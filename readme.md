@@ -23,15 +23,13 @@
 - In the `KPL_backup_on_testnet.js` file you'll find an array called  `KPLTokensAddress`. Within line 12 and line 16, please edit and replace all the KPL token addresses with the ones you own to back them up before proceeding.
 
 
-### Step 2. `KPL_send_out_tokens_on_mainnet.js`
+### Step 2. `KPL_create_new_mint_on_mainnet.js`
 
-- In the `KPL_send_out_tokens_on_mainnet.js` file, please edit and replaces both line 13 and line 14 (the old and new token address) - repeat if you have multiple addresses.
+### Step 3. `KPL_send_out_tokens_on_mainnet.js`
 
-### Step 3. `KPL_create_new_mint_on_mainnet.js`
+- In the `KPL_send_out_tokens_on_mainnet.js` file.  please edit and replaces both line 13 and line 14 (the old and new token address)
 
-- In the `KPL_create_new_mint_on_mainnet.js` file you'll find a parameter with the address  `"http://localhost:8899"`. **When you're done testing**, within line 10 and line 12, please edit and replace the local host address with the following mainnet url: `https://mainnet.koii.network`.
-
-  (Optional: Repeat Step2 and Step3 as needed)
+  (Optional: Repeat Step2 and Step3 if you have multiple addresses.)
 
 ### Step 4. Access https://kpl.koii.network/bind
 - Please upload your metadata again through the KPL token portal via the "Bind Metadata" tool.
