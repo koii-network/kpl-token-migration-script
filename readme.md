@@ -23,7 +23,8 @@
 - In the `KPL_backup_on_testnet.js` file you'll find an array called  `KPLTokensAddress`. Within line 12 and line 16, please edit and replace all the KPL token addresses with the ones you own to back them up before proceeding.
 
 
-### Step 2. `KPL_create_new_mint_on_mainnet.js`
+### Step 2. `KPL_create_new_mint_on_mainnet.js` 
+- You will see your new mint address in the console here. 
 
 ### Step 3. `KPL_send_out_tokens_on_mainnet.js`
 
