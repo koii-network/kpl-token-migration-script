@@ -14,7 +14,7 @@
   ```bash
      PRIVATE_KEY=your_private_key_here
      MONGODB_URL=your_mongodb_url_here
-     ```
+  ```
 
 ## Part B: Step by Step Edit & Run File
 
